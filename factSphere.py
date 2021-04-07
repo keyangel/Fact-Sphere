@@ -1,7 +1,7 @@
 import os
 import random
 import discord
-from dotenv import load_dotenv
+import dotenv
 
 load_dotenv('settings.env')
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -20,22 +20,25 @@ async def on_ready():
 
 @client.event
 async def on_message(fact):
+    settings='settings.env'
+    dotenv.load_dotenv(settings)
+    corruption = int(dotenv.get_key(settings, 'CORRUPTION'))
+
     #don't let the bot reply to itself
     if fact.author == client.user:
         return
     
-        if corruption > 1000:
-            fact_file = 'glitch.txt'
-            corruption = 0
-        else:
-            fact_file = 'facts.txt'
-            corruption += random.randint(1,5)
+    if corruption > 1000:
+        fact_file = 'glitch.txt'
+        dotenv.set_key(settings, 'CORRUPTION', str(0))
+    else:
+        fact_file = 'facts.txt'
+        corruption += random.randint(1,10)
+        dotenv.set_key(settings, 'CORRUPTION', str(corruption))
 
-        with open(fact_file, 'r') as facts:
-            list_facts = facts.readlines()
-            rng_fact = random.choice(list_facts)
-            print(rng_fact)
-        print(corruption)
+    with open(fact_file, 'r') as facts:
+        list_facts = facts.readlines()
+        rng_fact = random.choice(list_facts)
 
     state_fact = 'Fact: ' + rng_fact
 
