@@ -19,13 +19,15 @@ async def on_ready():
         )
 
 @client.event
-async def on_message(fact):
+async def on_message(message):
     settings='settings.env'
     dotenv.load_dotenv(settings)
     corruption = int(dotenv.get_key(settings, 'CORRUPTION'))
+    stat_pc = corruption / 10
+    stat_rep = 'Memory fragmentation at ' + str(stat_pc) + '%'
 
     #don't let the bot reply to itself
-    if fact.author == client.user:
+    if message.author == client.user:
         return
     
     if corruption > 1000:
@@ -42,20 +44,8 @@ async def on_message(fact):
 
     state_fact = 'Fact: ' + rng_fact
 
-    if fact.content.startswith('&fact'):
-        await fact.channel.send(state_fact)
-
-@client.event
-async def on_message(status):
-    settings='settings.env'
-    dotenv.load_dotenv(settings)
-    corruption = int(dotenv.get_key(settings, 'CORRUPTION'))
-    stat_pc = corruption / 10
-    stat_rep = 'Memory fragmentation at ' + stat_pc + '%'
-
-    #don't let the bot reply to itself
-    if status.author == client.user:
-        return
+    if message.content.startswith('&fact'):
+        await message.channel.send(state_fact)
 
     if status.content.startswith('&status'):
         await status.channel.send(stat_rep)
