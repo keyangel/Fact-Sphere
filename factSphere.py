@@ -3,7 +3,7 @@ import random
 import discord
 import dotenv
 
-load_dotenv('settings.env')
+dotenv.load_dotenv('settings.env')
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client()
@@ -44,5 +44,20 @@ async def on_message(fact):
 
     if fact.content.startswith('&fact'):
         await fact.channel.send(state_fact)
+
+@client.event
+async def on_message(status):
+    settings='settings.env'
+    dotenv.load_dotenv(settings)
+    corruption = int(dotenv.get_key(settings, 'CORRUPTION'))
+    stat_pc = corruption / 10
+    stat_rep = 'Memory fragmentation at ' + stat_pc + '%'
+
+    #don't let the bot reply to itself
+    if status.author == client.user:
+        return
+
+    if status.content.startswith('&status'):
+        await status.channel.send(stat_rep)
 
 client.run(TOKEN)
