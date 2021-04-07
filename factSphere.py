@@ -47,7 +47,7 @@ async def on_message(message):
     if message.content.startswith('&fact'):
         await message.channel.send(state_fact)
 
-    if status.content.startswith('&status'):
-        await status.channel.send(stat_rep)
+    if message.content.startswith('&status'):
+        await message.channel.send(stat_rep)
 
 client.run(TOKEN)
