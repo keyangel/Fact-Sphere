@@ -35,7 +35,7 @@ async def on_message(message):
         dotenv.set_key(settings, 'CORRUPTION', str(0))
     else:
         fact_file = 'facts.txt'
-        corruption += random.randint(1,10)
+        corruption += random.randint(1,20)
         dotenv.set_key(settings, 'CORRUPTION', str(corruption))
 
     with open(fact_file, 'r') as facts:
