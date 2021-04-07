@@ -1,4 +1,5 @@
 import os
+import random
 import discord
 from dotenv import load_dotenv
 
@@ -21,9 +22,11 @@ async def on_message(fact):
     if fact.author == client.user:
         return
     
-    rng_fact = 'This is a random fact.'
+    with open('facts.txt', 'r') as facts:
+    list_facts = facts.readlines()
+    rng_fact = random.choice(list_facts)
 
     if fact.content.startswith('&fact'):
-        await fact.channel.send(rng_fact)
+        await fact.channel.send('Fact:', rng_fact)
 
 client.run(TOKEN)
